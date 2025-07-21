@@ -10,8 +10,15 @@ export default defineConfig({
     plugins: [tailwindcss()],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src")
+        "@": path.resolve(__dirname, "./src"),
       },
     },
   }),
+  manifest: {
+    name: "Cookie Editor",
+    description:
+      "With a modern and clear design, Cookie Editor lets you view, edit, delete, and create cookies - as well as import, export and share them",
+    permissions: ["cookies", "tabs", "sidePanel"],
+    host_permissions: ["<all_urls>"],
+  },
 });
