@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 type ExportOptionsProps = {
-  onSelect: (option?: { format: "json" | "text" }) => void;
+  onSelect: (format: "json" | "text" | null) => void;
 };
 
 export function ExportOptions({ onSelect }: ExportOptionsProps) {
@@ -22,18 +22,21 @@ export function ExportOptions({ onSelect }: ExportOptionsProps) {
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem
           className="cursor-pointer"
-          onClick={() => onSelect({ format: "json" })}
+          onClick={() => onSelect("json")}
         >
           Export as JSON
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer"
-          onClick={() => onSelect({ format: "text" })}
+          onClick={() => onSelect("text")}
         >
           Export as Text
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onClick={() => onSelect()}>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => onSelect(null)}
+        >
           More Options
         </DropdownMenuItem>
       </DropdownMenuContent>

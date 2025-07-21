@@ -1,50 +1,26 @@
-// Khai báo global cho chrome để tránh lỗi TS
 import React from "react";
-// import CookieTable from "./components/cookie-table";
-import { IconDownload, IconPlus } from "@tabler/icons-react";
 import { useCookies } from "./hooks/use-cookie";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { Button } from "@/components/ui/button";
 import { ExportOptions } from "./components/export-options";
 import { ExportPanel } from "./components/export-panel";
-import { ExportOption } from "./types/export-option";
+import { useExport } from "./hooks/use-export";
 
 export default function CookiesPage() {
-  const [viewType, setViewType] = React.useState<"table" | "cards">("table");
   const [selected, setSelected] = React.useState<any>(null);
   const [openExportPanel, setOpenExportPanel] = React.useState<boolean>(false);
   const { cookies, loading, error } = useCookies();
 
-  // Dummy handlers
-  const handleView = (cookie: any) => setSelected(cookie);
-  const handleEdit = (cookie: any) => alert("Edit: " + cookie.name);
-  // Xử lý xóa cookie: chỉ demo, thực tế cần gọi chrome.cookies.remove
-  const handleDelete = (cookie: any) => {
-    alert("Delete: " + cookie.name);
-    // Thực tế: chrome.cookies.remove({ url: ..., name: ... })
-  };
-  const handleImport = () => alert("Import cookies");
+  const handleExport = useExport();
 
-  const handleSelectExportOption = (option?: { format: "json" | "text" }) => {
-    if (!option) {
+  const handleSelectExportOption = (format: "json" | "text" | null) => {
+    if (!format) {
       setOpenExportPanel(true);
       return;
     }
 
-    handleExport({ format: option.format, encrypt: false }); // Mặc định không mã hóa
-  };
-
-  const handleExport = (option: ExportOption) => {
-    const downloadLink = document.createElement("a");
-    const dataExport = JSON.stringify(cookies, null, 2);
-    const blob = new Blob([dataExport], { type: "application/json" });
-    const fileName = "cookies_export.json";
-    downloadLink.download = fileName;
-    downloadLink.href = URL.createObjectURL(blob);
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+    handleExport({ format, encrypt: false }); // Mặc định không mã hóa
   };
 
   return (
@@ -63,14 +39,6 @@ export default function CookiesPage() {
           <Button variant="outline" size="sm" className="space-x-1">
             <span>Import</span>
           </Button>
-          {/* <Button
-            variant="outline"
-            size="sm"
-            className="space-x-1"
-            onClick={handleExport}
-          >
-            <span>Export</span>
-          </Button> */}
           <ExportOptions onSelect={handleSelectExportOption} />
 
           <ExportPanel
